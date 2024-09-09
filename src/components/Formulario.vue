@@ -7,12 +7,13 @@ const alerta = reactive({
   tipo: "",
 });
 
-defineEmits([
+const emit = defineEmits([
   "update:nombre",
   "update:propietario",
   "update:email",
   "update:alta",
   "update:sintomas",
+  "guardarPaciente",
 ]);
 
 const props = defineProps({
@@ -44,6 +45,7 @@ const validar = () => {
     alerta.tipo = "error";
     return;
   }
+  emit("guardarPaciente");
 };
 </script>
 
