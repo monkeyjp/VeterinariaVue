@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive } from "vue";
+import { uid } from "uid";
 import Header from "./components/Header.vue";
 import Formulario from "./components/Formulario.vue";
 import Paciente from "./components/Paciente.vue";
@@ -7,6 +8,7 @@ import Paciente from "./components/Paciente.vue";
 const pacientes = ref([]);
 
 const paciente = reactive({
+  id: null,
   nombre: "",
   propietario: "",
   email: "",
@@ -15,7 +17,15 @@ const paciente = reactive({
 });
 
 const guardarPaciente = () => {
-  pacientes.value.push({ ...paciente });
+  if (paciente.id) {
+    const { id } = paciente;
+    const i = pacientes.value.findIndex(
+      (pacienteState) => pacienteState.id === id
+    );
+    pacientes.value[i] = { ...paciente };
+  } else {
+    pacientes.value.push({ ...paciente, id: uid() });
+  }
 
   Object.assign(paciente, {
     nombre: "",
@@ -23,7 +33,15 @@ const guardarPaciente = () => {
     email: "",
     alta: "",
     sintomas: "",
+    id: null,
   });
+};
+
+const actualizarPaciente = (id) => {
+  const pacienteEditar = pacientes.value.filter(
+    (paciente) => paciente.id === id
+  )[0];
+  Object.assign(paciente, pacienteEditar);
 };
 </script>
 
@@ -48,7 +66,11 @@ const guardarPaciente = () => {
             Información de
             <span class="text-indigo-600 font-bold">Pacientes</span>
           </p>
-          <Paciente v-for="paciente in pacientes" :paciente="paciente" />
+          <Paciente
+            v-for="paciente in pacientes"
+            :paciente="paciente"
+            @actualizar-paciente="actualizarPaciente"
+          />
         </div>
         <p v-else class="mt-20 text-2xl text-center">No Hay Pacientes</p>
       </div>
