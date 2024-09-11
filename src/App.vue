@@ -37,6 +37,10 @@ const guardarPaciente = () => {
   });
 };
 
+const eliminarPaciente = (id) => {
+  pacientes.value = pacientes.value.filter((paciente) => paciente.id != id);
+};
+
 const actualizarPaciente = (id) => {
   const pacienteEditar = pacientes.value.filter(
     (paciente) => paciente.id === id
@@ -56,6 +60,7 @@ const actualizarPaciente = (id) => {
         v-model:alta="paciente.alta"
         v-model:sintomas="paciente.sintomas"
         @guardarPaciente="guardarPaciente"
+        :id="paciente.id"
       />
       <div class="md:w-1/2 md:h-screen overflow-y-scroll">
         <h3 class="font-black text-3xl text-center">
@@ -70,6 +75,7 @@ const actualizarPaciente = (id) => {
             v-for="paciente in pacientes"
             :paciente="paciente"
             @actualizar-paciente="actualizarPaciente"
+            @eliminar-paciente="eliminarPaciente"
           />
         </div>
         <p v-else class="mt-20 text-2xl text-center">No Hay Pacientes</p>
